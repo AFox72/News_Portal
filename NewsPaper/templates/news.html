@@ -1,0 +1,36 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Новости и статьи
+{% endblock title %}
+
+
+{% block content %}
+    <h1>Все  статьи</h1>
+    <hr>
+    Количество новостей: {{ posts|length }}
+    {% if posts %}
+    <table>
+           <tr>
+               <td><h5>Название</h5></td>
+               <td><h5>Дата публикации</h5></td>
+               <td><h5>Превью</h5></td>
+
+           </tr>
+           {% for post in posts %}
+           <tr>
+
+               <td>{{ post.post_name|censor }}</td>
+               <td>{{ post.publication_date|date:'d.m.Y' }}</td>
+               <td>{{ post.post_text|truncatechars:"20"|censor }}</td>
+
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Статей нет</h2>
+   {% endif %}
+{% endblock content %}
