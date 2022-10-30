@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from .forms import PostForm
 from .models import Post
@@ -31,10 +32,11 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'edit.html'
+    permission_required = ('News.add_post',)
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -48,17 +50,18 @@ class PostCreate(CreateView):
             return super().form_valid(form)
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'edit.html'
+    permission_required = ('News.change_post',)
 
 
-
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin,PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'delete.html'
     success_url = reverse_lazy('post_list')
+    permission_required = ('News.delete_post',)
 
     # Create your views here.
 
