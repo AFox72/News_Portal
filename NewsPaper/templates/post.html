@@ -8,24 +8,13 @@ Post
 
 
 {% block content %}
-    <table>
-        <tr>
-            <td>
-                <h3>{{post.post_name|censor}}</h3>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <i>
-                    {{ post.publication_date|date:'d.m.Y' }}
-                </i>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                {{ post.post_text|censor }}
-            </td>
-        </tr>
-    </table>
+<h1>{{post.post_name|censor}}</h1>
+<hr>
 
+<h3>{{ post.post_text|censor }}</h3>
+<h5>{{ post.publication_date|date:'d.m.Y' }}</h5>
+<h5>Категории публикации:
+                {% for category in post.category.all %}
+                    <a href="{% url 'category_list' category.id %}">{{ category }}</a>
+    {% endfor %}</h5>
 {% endblock content %}
