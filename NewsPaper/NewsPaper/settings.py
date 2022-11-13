@@ -170,3 +170,9 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+CELERY_BROKER_URL = 'redis://:kE7fGh9VEObEoSFXw1lxPSnQSp5HDPWj@redis-16551.c1.asia-northeast1-1.gce.cloud.redislabs.com:16551/0'
+CELERY_RESULT_BACKEND = 'redis://:kE7fGh9VEObEoSFXw1lxPSnQSp5HDPWj@redis-16551.c1.asia-northeast1-1.gce.cloud.redislabs.com:16551/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

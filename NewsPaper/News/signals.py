@@ -4,26 +4,7 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import *
-
-
-def send_notifications(preview, pk, post_name, subscribers):
-    html_content = render_to_string(
-        'post_created_email.html',
-        {
-            'text': preview,
-            'link': f'{settings.SITE_URL}/news/{pk}'
-        }
-    )
-
-    msg = EmailMultiAlternatives(
-        subject=post_name,
-        body='',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=subscribers,
-    )
-
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
+from .tasks import send_notifications
 
 @receiver(m2m_changed, sender=PostCategory)
 def notify_about_new_post(sender, instance, **kwargs):
@@ -38,3 +19,21 @@ def notify_about_new_post(sender, instance, **kwargs):
         send_notifications(instance.preview(), instance.pk, instance.post_name, subscribers)
 
 
+
+# @receiver(m2m_changed, sender=Post.category.through)
+# def notify_subscribers(instance, action, *args, **kwargs):
+#     if action == 'post_add':
+#         users_emails = [
+#                 user.email
+#                 for category in instance.category.all()
+#                 for user in category.subscribers.all()
+#             ]
+#         for email in users_emails:
+#             user = User.objects.get(email=email)
+#             html_content = render_to_string('post_created_email.html', {'post_mail': instance}, )
+#
+#             subject=f'"Здравствуй, {user.username}. Новая статья в твоём любимом разделе(celery)!"'\
+#                     f'{instance.post_name}'
+#             from_email = 'settings.DEFAULT_FROM_EMAI'
+#             send_notifications.delay(subject, from_email, email, html_content)
+#
