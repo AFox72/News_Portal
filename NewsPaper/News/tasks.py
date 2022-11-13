@@ -37,7 +37,7 @@ def week_notification():
     categories = set(posts.values_list('category__category', flat=True))
     subscribers = set(Category.objects.filter(category__in=categories).values_list('subscribers__email', flat=True))
     html_content = render_to_string(
-        'weekly_posts.html',
+        'account/email/weekly_posts.html',
         {
             'link': settings.SITE_URL,
             'posts': posts
