@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm
 from .models import *
 from .filters import PostFilter
+from django.core.cache import cache
 
 
 class PostList(ListView):
@@ -27,6 +28,14 @@ class PostList(ListView):
         context['filterset'] = self.filterset
         return context
 
+    def get_object(self, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 class PostDetail(DetailView):
     model = Post
